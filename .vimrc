@@ -692,3 +692,7 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 map <F12> :!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++  .<CR>
 
 
+
+nnoremap <F5> :e %:p:s,.hpp$,.X123X,:s,.cpp$,.hpp,:s,.X123X$,.cpp,<CR> 
+
+

@@ -1,3 +1,4 @@
+
 " vim-bootstrap 224c6cc
 
 "*****************************************************************************
@@ -44,8 +45,12 @@ Plug 'Yggdroot/indentLine'
 Plug 'avelino/vim-bootstrap-updater'
 Plug 'sheerun/vim-polyglot'
 Plug 'ervandew/supertab'
-Plug 'Shougo/neocomplete.vim'
+"Plug 'Shougo/neocomplete.vim'
 Plug 'jakedouglas/exuberant-ctags'
+Plug 'christoomey/vim-system-copy'
+Plug 'mxw/vim-jsx'
+Plug 'pangloss/vim-javascript'
+Plug 'elzr/vim-json'
 
 if isdirectory('/usr/local/opt/fzf')
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -157,12 +162,17 @@ let g:session_autoload = "no"
 let g:session_autosave = "no"
 let g:session_command_aliases = 1
 
+
+
 "*****************************************************************************
 "" Visual Settings
 "*****************************************************************************
 syntax on
 set ruler
 set number
+set relativenumber             " Show relative line numbers
+set cursorline
+
 
 let no_buffers_menu=1
 if !exists('g:not_finish_vimplug')
@@ -203,6 +213,11 @@ endif
 if &term =~ '256color'
   set t_ut=
 endif
+
+
+highlight clear CursorLine to clear the current cusorline hl
+highlight CursorLine gui=underline cterm=underline 
+highlight Visual cterm=bold ctermbg=Blue ctermfg=NONE
 
 
 "" Disable the blinking cursor.
@@ -271,7 +286,7 @@ nnoremap <silent> <leader>f :Rgrep<CR>
 let Grep_Default_Options = '-IR'
 let Grep_Skip_Files = '*.log *.db'
 let Grep_Skip_Dirs = '.git node_modules'
-let Grep_Default_Filelist = '*.cpp *.hpp'
+let Grep_Default_Filelist = '*.cpp *.hpp *.js *.python'
 
 
 " vimshell.vim
@@ -561,7 +576,7 @@ let g:syntastic_cpp_compiler = 'clang++'
 let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
 
 " supertab
-let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
+let g:SuperTabDefaultCompletionType =  "<c-x><c-p>"
 
  " Disable auto popup, use <Tab> to autocomplete
  let g:clang_complete_auto = 0
@@ -569,130 +584,92 @@ let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
  let g:clang_complete_copen = 1
 
 
-"set tags+=~/.vim/tags/cpp
-"set tags+=~/tags/tags_pi04
+"set tags+=~/pi05_tag
+"set tags+=~/tags/tags_pi07
 
-" NEOComplete.vim
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 3
+" Your customised tags go first.
+"
 
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-        \ }
 
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
+if v:version >= 600
+  filetype plugin on
+  filetype indent on
+else
+  filetype on
 endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
+" if v:version >= 700
+"   set omnifunc=syntaxcomplete#Complete " override built-in C omnicomplete with C++ OmniCppComplete plugin
+"   let OmniCpp_GlobalScopeSearch   = 1
+"   let OmniCpp_DisplayMode         = 1
+"   let OmniCpp_ShowScopeInAbbr     = 0 "do not show namespace in pop-up
+"   let OmniCpp_ShowPrototypeInAbbr = 1 "show prototype in pop-up
+"   let OmniCpp_ShowAccess          = 1 "show access in pop-up
+"   let OmniCpp_SelectFirstItem     = 1 "select first item in pop-up
+"   set completeopt=menuone,menu,longest
+" endif
 
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? "\<C-y>" : "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-" Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
-
-" AutoComplPop like behavior.
-"let g:neocomplete#enable_auto_select = 1
-
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplete#enable_auto_select = 1
-"let g:neocomplete#disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+" if version >= 700
+"   let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
+"   highlight   clear
+"   highlight   Pmenu         ctermfg=0 ctermbg=2
+"   highlight   PmenuSel      ctermfg=0 ctermbg=7
+"   highlight   PmenuSbar     ctermfg=7 ctermbg=0
+"   highlight   PmenuThumb    ctermfg=0 ctermbg=7
+" endif
 
 " Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-
-" --------------------
- " OmniCppComplete
- " --------------------
- " set Ctrl+j in insert mode, like VS.Net
- imap <C-j> <C-X><C-O>
- " :inoremap <expr> <CR> pumvisible() ? "\<c-y>" : "\<c-g>u\<CR>"
- " set completeopt as don't show menu and preview
- set completeopt=menuone
- " Popup menu hightLight Group
- " use global scope search
- let OmniCpp_GlobalScopeSearch = 1
- " 0 = namespaces disabled
- " 1 = search namespaces in the current buffer
- " 2 = search namespaces in the current buffer and in included files
- let OmniCpp_NamespaceSearch = 1
- " 0 = auto
- " 1 = always show all members
- let OmniCpp_DisplayMode = 1
- " 0 = don't show scope in abbreviation
- " 1 = show scope in abbreviation and remove the last column
- let OmniCpp_ShowScopeInAbbr = 0
- " This option allows to display the prototype of a function in the  abbreviation part of the popup menu.
- " 0 = don't display prototype in abbreviation
- " 1 = display prototype in abbreviation
- let OmniCpp_ShowPrototypeInAbbr = 1
- " This option allows to show/hide the access information ('+', '#', '-') in the popup menu.
- " 0 = hide access
- " 1 = show access
- let OmniCpp_ShowAccess = 1
- " This option can be use if you don't want to parse using namespace declarations in included files and want to add namespaces that are always  used in your project.
- let OmniCpp_DefaultNamespaces = ["std"]
- " Complete Behaviour
- let OmniCpp_MayCompleteDot = 0
- let OmniCpp_MayCompleteArrow = 0
- let OmniCpp_MayCompleteScope = 0
- " When 'completeopt' does not contain "longest", Vim automatically select the first entry of the popup menu. You can change this behaviour with the  OmniCpp_SelectFirstItem option.
- let OmniCpp_SelectFirstItem = 0
-
+" autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+" autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+" autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+" autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+" autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 " map ctag generation
 map <F12> :!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++  .<CR>
 
+let g:tags_cfg_ = "~/tags/pi07_cfg_tags"
+let g:cos_cfg = "/srv/schroot/home/mreubino/mreubino-cos_pi07/usr/include/cosm-cfg-api"
+
+let g:tags_hal_ = "~/tags/pi07_hal_tags"
+let g:cos_hal = "/srv/schroot/home/mreubino/mreubino-cos_pi07/usr/include/ulc-hal"
+
+let g:tags_sup_ = "~/tags/pi07_sup_tags"
+let g:cos_sup = "/srv/schroot/home/mreubino/mreubino-cos_pi07/usr/include/libnsgsup"
+
+let g:tags_uspp_ = "~/tags/pi07_uspp_tags"
+let g:cos_uspp = "/srv/schroot/home/mreubino/mreubino-cos_pi07/usr/include/ulc-uspp-dpdk"
+
+let g:tags_sched_ = "~/tags/pi07_sched_tags"
+let g:cos_sched = "/srv/schroot/home/mreubino/mreubino-cos_pi07/usr/include/ulc-scheduler"
+
+let g:tags_cpp_ = "~/tags/pi07_cpp_tags"
+let g:cos_cpp = "/srv/schroot/home/mreubino/mreubino-cos_pi07/usr/include/x86_64-linux-gnu/c++/4.9"
+
+let g:tags_stl_ = "~/tags/cpp"
+set tags+=./tags;,$DOC/tags
+execute "set tags+=".g:tags_cfg_
+execute "set tags+=".g:tags_hal_
+execute "set tags+=".g:tags_sup_
+execute "set tags+=".g:tags_uspp_
+execute "set tags+=".g:tags_sched_
+execute "set tags+=".g:tags_cpp_
+execute "set tags+=".g:tags_stl_
+
+function! UpdateTags()
+    execute ":!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++ -f "   g:tags_cfg_  g:cos_cfg
+    execute ":!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++ -f "   g:tags_hal_  g:cos_hal
+    execute ":!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++ -f "   g:tags_sup_  g:cos_sup
+    execute ":!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++ -f "   g:tags_uspp_  g:cos_uspp
+    execute ":!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++ -f "   g:tags_sched_  g:cos_sched
+    execute ":!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++ -f "   g:tags_cpp_  g:cos_cpp
+    echohl StatusLine | echo "C/C++ tag updated" | echohl None
+endfunction
+
+map <F10>  :call UpdateTags() <CR>
+map <F11> :!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++ -f ~/tags/pi07_tag  /srv/schroot/home/mreubino/mreubino-cos_pi07/usr/include/cosm-cfg-api<CR>
 
 
-nnoremap <F5> :e %:p:s,.hpp$,.X123X,:s,.cpp$,.hpp,:s,.X123X$,.cpp,<CR> 
+nnoremap <F5> :e %:p:s,.hpp$,.X123X,:s,.cpp$,.hpp,:s,.X123X$,.cpp,<CR>
 
 

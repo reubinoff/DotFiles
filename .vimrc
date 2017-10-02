@@ -597,34 +597,7 @@ else
   filetype on
 endif
 
-" if v:version >= 700
-"   set omnifunc=syntaxcomplete#Complete " override built-in C omnicomplete with C++ OmniCppComplete plugin
-"   let OmniCpp_GlobalScopeSearch   = 1
-"   let OmniCpp_DisplayMode         = 1
-"   let OmniCpp_ShowScopeInAbbr     = 0 "do not show namespace in pop-up
-"   let OmniCpp_ShowPrototypeInAbbr = 1 "show prototype in pop-up
-"   let OmniCpp_ShowAccess          = 1 "show access in pop-up
-"   let OmniCpp_SelectFirstItem     = 1 "select first item in pop-up
-"   set completeopt=menuone,menu,longest
-" endif
 
-" if version >= 700
-"   let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
-"   highlight   clear
-"   highlight   Pmenu         ctermfg=0 ctermbg=2
-"   highlight   PmenuSel      ctermfg=0 ctermbg=7
-"   highlight   PmenuSbar     ctermfg=7 ctermbg=0
-"   highlight   PmenuThumb    ctermfg=0 ctermbg=7
-" endif
-
-" Enable omni completion.
-" autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-" autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-" autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-" autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-" autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" map ctag generation
 map <F12> :!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++  .<CR>
 
 

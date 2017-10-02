@@ -627,47 +627,6 @@ endif
 " map ctag generation
 map <F12> :!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++  .<CR>
 
-let g:tags_cfg_ = "~/tags/pi07_cfg_tags"
-let g:cos_cfg = "/srv/schroot/home/mreubino/mreubino-cos_pi07/usr/include/cosm-cfg-api"
-
-let g:tags_hal_ = "~/tags/pi07_hal_tags"
-let g:cos_hal = "/srv/schroot/home/mreubino/mreubino-cos_pi07/usr/include/ulc-hal"
-
-let g:tags_sup_ = "~/tags/pi07_sup_tags"
-let g:cos_sup = "/srv/schroot/home/mreubino/mreubino-cos_pi07/usr/include/libnsgsup"
-
-let g:tags_uspp_ = "~/tags/pi07_uspp_tags"
-let g:cos_uspp = "/srv/schroot/home/mreubino/mreubino-cos_pi07/usr/include/ulc-uspp-dpdk"
-
-let g:tags_sched_ = "~/tags/pi07_sched_tags"
-let g:cos_sched = "/srv/schroot/home/mreubino/mreubino-cos_pi07/usr/include/ulc-scheduler"
-
-let g:tags_cpp_ = "~/tags/pi07_cpp_tags"
-let g:cos_cpp = "/srv/schroot/home/mreubino/mreubino-cos_pi07/usr/include/x86_64-linux-gnu/c++/4.9"
-
-let g:tags_stl_ = "~/tags/cpp"
-set tags+=./tags;,$DOC/tags
-execute "set tags+=".g:tags_cfg_
-execute "set tags+=".g:tags_hal_
-execute "set tags+=".g:tags_sup_
-execute "set tags+=".g:tags_uspp_
-execute "set tags+=".g:tags_sched_
-execute "set tags+=".g:tags_cpp_
-execute "set tags+=".g:tags_stl_
-
-function! UpdateTags()
-    execute ":!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++ -f "   g:tags_cfg_  g:cos_cfg
-    execute ":!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++ -f "   g:tags_hal_  g:cos_hal
-    execute ":!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++ -f "   g:tags_sup_  g:cos_sup
-    execute ":!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++ -f "   g:tags_uspp_  g:cos_uspp
-    execute ":!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++ -f "   g:tags_sched_  g:cos_sched
-    execute ":!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++ -f "   g:tags_cpp_  g:cos_cpp
-    echohl StatusLine | echo "C/C++ tag updated" | echohl None
-endfunction
-
-map <F10>  :call UpdateTags() <CR>
-map <F11> :!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++ -f ~/tags/pi07_tag  /srv/schroot/home/mreubino/mreubino-cos_pi07/usr/include/cosm-cfg-api<CR>
-
 
 nnoremap <F5> :e %:p:s,.hpp$,.X123X,:s,.cpp$,.hpp,:s,.X123X$,.cpp,<CR>
 

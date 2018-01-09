@@ -9,7 +9,7 @@ endif
 
 let vimplug_exists=expand('~/.vim/autoload/plug.vim')
 
-let g:vim_bootstrap_langs = "c,javascript,python"
+let g:vim_bootstrap_langs = "c,javascript,html,python"
 let g:vim_bootstrap_editor = "vim"				" nvim or vim
 
 if !filereadable(vimplug_exists)
@@ -29,22 +29,23 @@ call plug#begin(expand('~/.vim/plugged'))
 "*****************************************************************************
 Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
-Plug 'tpope/vim-commentary'
+" Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-commentary'
 Plug 'vim-scripts/grep.vim'
 Plug 'vim-scripts/CSApprox'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'Raimondi/delimitMate'
 Plug 'majutsushi/tagbar'
-"Plug 'scrooloose/syntastic'
+Plug 'xolox/vim-easytags'
+Plug 'scrooloose/syntastic'
 Plug 'Yggdroot/indentLine'
 Plug 'avelino/vim-bootstrap-updater'
 Plug 'sheerun/vim-polyglot'
 Plug 'ervandew/supertab'
-"Plug 'Shougo/neocomplete.vim'
 Plug 'jakedouglas/exuberant-ctags'
 Plug 'christoomey/vim-system-copy'
 Plug 'mxw/vim-jsx'
@@ -77,6 +78,9 @@ Plug 'honza/vim-snippets'
 "" Color
 Plug 'tomasr/molokai'
 
+
+"" Games
+Plug 'johngrib/vim-game-code-break'
 "*****************************************************************************
 "" Custom bundles
 "*****************************************************************************
@@ -94,6 +98,14 @@ Plug 'jelera/vim-javascript-syntax'
 " python
 "" Python Bundle
 Plug 'davidhalter/jedi-vim'
+Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
+" Plug 'python-mode/python-mode'
+
+" html
+Plug 'hail2u/vim-css3-syntax'
+Plug 'gorodinskiy/vim-coloresque'
+Plug 'tpope/vim-haml'
+Plug 'mattn/emmet-vim'
 
 
 "*****************************************************************************
@@ -285,7 +297,7 @@ nnoremap <silent> <leader>f :Rgrep<CR>
 let Grep_Default_Options = '-IR'
 let Grep_Skip_Files = '*.log *.db'
 let Grep_Skip_Dirs = '.git node_modules'
-let Grep_Default_Filelist = '*.cpp *.hpp *.js *.python'
+let Grep_Default_Filelist = '*.js *.py *.yml *.html'
 
 
 " vimshell.vim
@@ -416,7 +428,10 @@ let g:syntastic_auto_loc_list=1
 let g:syntastic_aggregate_errors = 1
 
 " Tagbar
-nmap <silent> <F4> :TagbarToggle<CR>
+" nmap <silent> <F4> :TagbarToggle<CR>
+" nmap <F4> :TagbarToggle<CR>
+nmap <F8> :TagbarToggle<CR>
+
 let g:tagbar_autofocus = 1
 
 " Disable visualbell
@@ -458,6 +473,11 @@ noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
 noremap <C-h> <C-w>h
 
+
+" remove highlight after search
+nnoremap <Leader><space> :noh<cr>
+
+
 "" Vmap for maintain Visual Mode after shifting > and <
 vmap < <gv
 vmap > >gv
@@ -477,6 +497,10 @@ nnoremap <Leader>o :.Gbrowse<CR>
 autocmd FileType c setlocal tabstop=4 shiftwidth=4 expandtab
 autocmd FileType cpp setlocal tabstop=4 shiftwidth=4 expandtab
 
+" html
+" for html files, 2 spaces
+ autocmd Filetype html setlocal ts=2 sw=2 expandtab
+
 
 " javascript
 let g:javascript_enable_domhtmlcss = 1
@@ -492,21 +516,48 @@ augroup END
 " vim-python
 augroup vimrc-python
   autocmd!
-  autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 colorcolumn=79
+  autocmd FileType python setlocal tabstop=4 shiftwidth=4 colorcolumn=79 noexpandtab  autoindent
       \ formatoptions+=croq softtabstop=4
       \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 augroup END
+set autoindent noexpandtab tabstop=4 shiftwidth=4
+
+" Javascript
+let g:javascript_plugin_ngdoc = 1
+let g:javascript_plugin_flow = 1
+
+let g:javascript_conceal_function             = "ƒ"
+let g:javascript_conceal_null                 = "ø"
+let g:javascript_conceal_this                 = "@"
+let g:javascript_conceal_return               = "⇚"
+let g:javascript_conceal_undefined            = "¿"
+let g:javascript_conceal_NaN                  = "ℕ"
+let g:javascript_conceal_prototype            = "¶"
+let g:javascript_conceal_static               = "•"
+let g:javascript_conceal_super                = "Ω"
+let g:javascript_conceal_arrow_function       = "⇒"
+let g:javascript_conceal_noarg_arrow_function = "🞅"
+let g:javascript_conceal_underscore_arrow_function = "🞅"
+
+map <leader>l :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<CR>
+
+
+
 
 " jedi-vim
-let g:jedi#popup_on_dot = 0
+let g:jedi#popup_on_dot = 1
 let g:jedi#goto_assignments_command = "<leader>g"
 let g:jedi#goto_definitions_command = "<leader>d"
 let g:jedi#documentation_command = "K"
 let g:jedi#usages_command = "<leader>n"
 let g:jedi#rename_command = "<leader>r"
-let g:jedi#show_call_signatures = "0"
-let g:jedi#completions_command = "<C-Space>"
+let g:jedi#show_call_signatures = "2"
 let g:jedi#smart_auto_mappings = 0
+" disable docstring window to popup during completion
+
+autocmd FileType python setlocal completeopt-=preview
+setlocal omnifunc=jedi#completions
+
 
 " syntastic
 let g:syntastic_python_checkers=['python', 'flake8']
@@ -519,7 +570,7 @@ let g:airline#extensions#virtualenv#enabled = 1
 let g:polyglot_disabled = ['python']
 let python_highlight_all = 1
 
-
+" Python Identation
 
 "*****************************************************************************
 "*****************************************************************************
@@ -575,7 +626,10 @@ let g:syntastic_cpp_compiler = 'clang++'
 let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
 
 " supertab
-let g:SuperTabDefaultCompletionType =  "<c-x><c-p>"
+let g:SuperTabContextDefaultCompletionType = "<c-x><c-o>""
+let g:SuperTabDefaultCompletionType = "context"
+let g:SuperTabLongestEnhanced = 1
+let g:SuperTabCrMapping = 0
 
  " Disable auto popup, use <Tab> to autocomplete
  let g:clang_complete_auto = 0
@@ -583,11 +637,6 @@ let g:SuperTabDefaultCompletionType =  "<c-x><c-p>"
  let g:clang_complete_copen = 1
 
 
-"set tags+=~/pi05_tag
-"set tags+=~/tags/tags_pi07
-
-" Your customised tags go first.
-"
 
 
 if v:version >= 600
@@ -598,9 +647,14 @@ else
 endif
 
 
-map <F12> :!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++  .<CR>
+" map <F12> :!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++  .<CR>
 
 
-nnoremap <F5> :e %:p:s,.hpp$,.X123X,:s,.cpp$,.hpp,:s,.X123X$,.cpp,<CR>
+nnoremap <F6> :e %:p:s,.hpp$,.X123X,:s,.cpp$,.hpp,:s,.X123X$,.cpp,<CR>
+nnoremap <F5> :edit <CR>
 
+set pastetoggle=<F4>
+
+"scroll with mouse
+:set mouse=a
 

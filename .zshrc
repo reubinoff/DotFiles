@@ -90,15 +90,16 @@ fi
 set -g mouse-resize-pane on
 
 
-alias open_source="cd ~/source ;vim ."
-alias open_sg="cd ~/source/sg ; vim ."
-alias open_docker_env="cd ~/source/liblkpo_docker/docker/environments/icsra/1.4/stand_alone/"
-alias python=python3
-alias ipython="ipython"
 
 # activate virt_env
 alias activate="cd ~/virt_env/ra/; source ~/virt_env/ra/bin/activate &>/dev/null ; cd - &> /dev/null"
 alias showFiles='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
 alias hideFiles='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
+
+alias open_source="activate; cd ~/source ;vim ."
+alias open_sg="activate; cd ~/source/sg ; vim ."
+alias open_docker_env="activate; cd ~/source/liblkpo_docker/docker/environments/icsra/1.4/stand_alone/"
+alias python=python3
+alias ipython="ipython"
 
 alias start_x11_listen='socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\'"'"

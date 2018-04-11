@@ -51,6 +51,8 @@ Plug 'christoomey/vim-system-copy'
 Plug 'mxw/vim-jsx'
 Plug 'pangloss/vim-javascript'
 Plug 'elzr/vim-json'
+" Plug 'Valloric/YouCompleteMe'
+Plug 'ternjs/tern_for_vim'
 
 if isdirectory('/usr/local/opt/fzf')
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -99,6 +101,7 @@ Plug 'jelera/vim-javascript-syntax'
 "" Python Bundle
 Plug 'davidhalter/jedi-vim'
 Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
+Plug 'plytophogy/vim-virtualenv'
 " Plug 'python-mode/python-mode'
 
 " html
@@ -141,6 +144,9 @@ set tabstop=4
 set softtabstop=0
 set shiftwidth=4
 set expandtab
+
+set list
+set listchars=eol:⏎,tab:>-,trail:␠,nbsp:⎵
 
 "" Map leader to ,
 let mapleader=','
@@ -208,6 +214,9 @@ else
   let g:indentLine_concealcursor = 0
   let g:indentLine_char = '┆'
   let g:indentLine_faster = 1
+  " Background (Vim, GVim)
+  " let g:indentLine_bgcolor_term = 202
+  " let g:indentLine_bgcolor_gui = '#FF5F00'
 
   
   if $COLORTERM == 'gnome-terminal'
@@ -508,7 +517,7 @@ let g:javascript_enable_domhtmlcss = 1
 " vim-javascript
 augroup vimrc-javascript
   autocmd!
-  autocmd FileType javascript set tabstop=4|set shiftwidth=4|set expandtab softtabstop=4
+  autocmd FileType javascript setlocal tabstop=4 shiftwidth=4 noexpandtab softtabstop=4 autoindent
 augroup END
 
 
@@ -521,6 +530,12 @@ augroup vimrc-python
       \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 augroup END
 set autoindent noexpandtab tabstop=4 shiftwidth=4
+
+function! Generate_pdb()
+	call append(line('.') - 1, 'import ipdb; ipdb.set_trace()')
+endfunction
+
+nmap <leader>pdb  :call Generate_pdb()<CR>
 
 " Javascript
 let g:javascript_plugin_ngdoc = 1
@@ -555,8 +570,15 @@ let g:jedi#show_call_signatures = "2"
 let g:jedi#smart_auto_mappings = 0
 " disable docstring window to popup during completion
 
+
+let g:ycm_python_binary_path = 'python'
+let g:ycm_autoclose_preview_window_after_completion=1
+let g:ycm_filetype_specific_completion_to_disable = { 'python': 1 }
+nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
 autocmd FileType python setlocal completeopt-=preview
 setlocal omnifunc=jedi#completions
+setlocal completeopt=longest,menuone
 
 
 " syntastic
@@ -624,6 +646,8 @@ endif
 " syntastic_
 let g:syntastic_cpp_compiler = 'clang++'
 let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
+" let g:syntastic_python_checkers = ['mypy']
+
 
 " supertab
 let g:SuperTabContextDefaultCompletionType = "<c-x><c-o>""
@@ -636,7 +660,8 @@ let g:SuperTabCrMapping = 0
  " Show clang errors in the quickfix window
  let g:clang_complete_copen = 1
 
-
+" VirtualEnv
+let g:virtualenv_directory = '/Users/moshereubinoff/virt_env'
 
 
 if v:version >= 600
@@ -657,4 +682,11 @@ set pastetoggle=<F4>
 
 "scroll with mouse
 :set mouse=a
+
+"override the option tt to remove tab signs
+set invlist
+nnoremap <leader>tt :set invlist<cr>
+let g:easytags_async = 1
+
+
 

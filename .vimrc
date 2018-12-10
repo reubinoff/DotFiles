@@ -28,7 +28,7 @@ call plug#begin(expand('~/.vim/plugged'))
 "" Plug install packages
 "*****************************************************************************
 Plug 'scrooloose/nerdtree'
-Plug 'jistr/vim-nerdtree-tabs'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 " Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
@@ -41,17 +41,18 @@ Plug 'bronson/vim-trailing-whitespace'
 Plug 'Raimondi/delimitMate'
 Plug 'majutsushi/tagbar'
 Plug 'xolox/vim-easytags'
-Plug 'scrooloose/syntastic'
+" Plug 'Valloric/YouCompleteMe' 
+" Plug 'scrooloose/syntastic'
+Plug 'w0rp/ale'
 Plug 'Yggdroot/indentLine'
 Plug 'avelino/vim-bootstrap-updater'
 Plug 'sheerun/vim-polyglot'
 Plug 'ervandew/supertab'
-Plug 'jakedouglas/exuberant-ctags'
 Plug 'christoomey/vim-system-copy'
 Plug 'mxw/vim-jsx'
 Plug 'pangloss/vim-javascript'
+Plug 'tpope/vim-surround'
 Plug 'elzr/vim-json'
-" Plug 'Valloric/YouCompleteMe'
 Plug 'ternjs/tern_for_vim'
 
 if isdirectory('/usr/local/opt/fzf')
@@ -295,6 +296,7 @@ let g:NERDTreeIgnore=['\.rbc$', '\~$', '\.pyc$', '\.db$', '\.sqlite$', '__pycach
 let g:NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$', '\.bak$', '\~$']
 let g:NERDTreeShowBookmarks=1
 let g:nerdtree_tabs_focus_on_files=1
+" let g:NERDTreeMapOpenInTab='<ENTER>'
 let g:NERDTreeMapOpenInTabSilent = '<RightMouse>'
 let g:NERDTreeWinSize = 50
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
@@ -306,7 +308,7 @@ nnoremap <silent> <leader>f :Rgrep<CR>
 let Grep_Default_Options = '-IR'
 let Grep_Skip_Files = '*.log *.db'
 let Grep_Skip_Dirs = '.git node_modules'
-let Grep_Default_Filelist = '*.js *.py *.yml *.html'
+let Grep_Default_Filelist = '*.py *.yml *.html *.js'
 
 
 " vimshell.vim
@@ -426,6 +428,24 @@ let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<c-b>"
 let g:UltiSnipsEditSplit="vertical"
+
+
+" Ale
+let g:ale_linters = {
+\	'python': ['flake8', 'pylint'],
+\   'javascript': ['eslint'],
+\   'typescript': ['tslint'],
+\   'html': ['tidy']
+\}
+let g:airline#extensions#ale#enabled = 1
+let g:ale_echo_msg_format = '[%linter%] %...code...% >> %s [%severity%]'
+let g:ale_lint_delay = 500
+let g:ale_fixers = {
+\	'python': ['autopep8', 'yapf']
+\}
+" nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+" nmap <silent> <C-j> <Plug>(ale_next_wrap)
+
 
 " syntastic
 let g:syntastic_always_populate_loc_list=1
@@ -559,6 +579,7 @@ map <leader>l :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<
 
 
 
+
 " jedi-vim
 let g:jedi#popup_on_dot = 1
 let g:jedi#goto_assignments_command = "<leader>g"
@@ -571,14 +592,14 @@ let g:jedi#smart_auto_mappings = 0
 " disable docstring window to popup during completion
 
 
-let g:ycm_python_binary_path = 'python'
-let g:ycm_autoclose_preview_window_after_completion=1
-let g:ycm_filetype_specific_completion_to_disable = { 'python': 1 }
-nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
+" let g:ycm_python_binary_path = 'python'
+" let g:ycm_autoclose_preview_window_after_completion=1
+" let g:ycm_filetype_specific_completion_to_disable = { 'python': 1 }
+" nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 autocmd FileType python setlocal completeopt-=preview
-setlocal omnifunc=jedi#completions
-setlocal completeopt=longest,menuone
+" setlocal completeopt=menuone,longest,preview
+" setlocal omnifunc=jedi#completions
 
 
 " syntastic
@@ -590,6 +611,7 @@ let g:airline#extensions#virtualenv#enabled = 1
 " Syntax highlight
 " Default highlight is better than polyglot
 let g:polyglot_disabled = ['python']
+let g:graphql_javascript_tags = []
 let python_highlight_all = 1
 
 " Python Identation
@@ -643,6 +665,22 @@ else
 endif
 
 
+"vimscript
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : '☒',
+    \ "Unknown"   : "?"
+    \ }
+
+let g:NERDTreeNodeDelimiter = "\u00a0"
+
 " syntastic_
 let g:syntastic_cpp_compiler = 'clang++'
 let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
@@ -656,12 +694,12 @@ let g:SuperTabLongestEnhanced = 1
 let g:SuperTabCrMapping = 0
 
  " Disable auto popup, use <Tab> to autocomplete
- let g:clang_complete_auto = 0
+ " let g:clang_complete_auto = 0
  " Show clang errors in the quickfix window
- let g:clang_complete_copen = 1
+ " let g:clang_complete_copen = 1
 
 " VirtualEnv
-let g:virtualenv_directory = '/Users/moshereubinoff/virt_env'
+let g:virtualenv_directory = '/Users/reubinoff/venv/ra'
 
 
 if v:version >= 600
@@ -672,7 +710,8 @@ else
 endif
 
 
-" map <F12> :!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --languages=c++  .<CR>
+noremap <F12> <Esc>:syntax sync fromstart<CR>
+
 
 
 nnoremap <F6> :e %:p:s,.hpp$,.X123X,:s,.cpp$,.hpp,:s,.X123X$,.cpp,<CR>
@@ -687,6 +726,3 @@ set pastetoggle=<F4>
 set invlist
 nnoremap <leader>tt :set invlist<cr>
 let g:easytags_async = 1
-
-
-

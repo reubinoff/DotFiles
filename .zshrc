@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/moshereubinoff/.oh-my-zsh
+export ZSH=/Users/reubinoff/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -30,7 +30,7 @@ export ZSH=/Users/moshereubinoff/.oh-my-zsh
 # DISABLE_LS_COLORS="true"
 
 # Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
+DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
@@ -55,7 +55,7 @@ export ZSH=/Users/moshereubinoff/.oh-my-zsh
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(git docker pip)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -92,14 +92,36 @@ set -g mouse-resize-pane on
 
 
 # activate virt_env
-alias activate="cd ~/virt_env/ra/; source ~/virt_env/ra/bin/activate &>/dev/null ; cd - &> /dev/null"
+alias activate="cd ~/venv/ra/; source ~/venv/ra/bin/activate &>/dev/null ; cd - &> /dev/null"
 alias showFiles='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
 alias hideFiles='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
 
 alias open_source="activate; cd ~/source ;vim ."
-alias open_sg="activate; cd ~/source/sg ; vim ."
-alias open_docker_env="activate; cd ~/source/liblkpo_docker/docker/environments/icsra/1.4/stand_alone/"
+export DEV_SRC="~/source/sg"
+alias open_sg="activate; cd $DEV_SRC ; vim ."
+alias open_docker_env="activate; cd /Users/reubinoff/source/sg/devenv/sessions"
 alias python=python3
 alias ipython="ipython"
 
 alias start_x11_listen='socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\'"'"
+
+# sshfs -p 2020 root@localhost:/tmp/manager ~/ssh_map
+alias sshfs_local=sshfs -p 2020 root@localhost:/tmp/manager ~/ssh_map -ovolname=MOSHE
+#
+# SSH Machine
+alias start_ssh_srv='cd /Users/reubinoff/development/docker/continers_hanlder/ssh_srv ; ./up.sh ; docker exec -ti ssh_srv /bin/zsh; cd -'
+alias stop_ssh_srv='cd /Users/reubinoff/development/docker/continers_hanlder/ssh_srv ; ./down.sh; cd -'
+
+
+# sessions devenv
+export DEV_ENV="~/docker_data"
+alias dev_start="activate ; cd $DEV_SRC/devenv/environments ; tmuxp load ../sessions/4_panes_session_tmux.json -y"
+alias def_Start=$dev_start
+alias dev_stop="activate ; cd $DEV_SRC/devenv/environments ; docker-compose down; tmux kill-window"
+alias dev_shell="activate ; cd $DEV_SRC/devenv/environments ; ./shell.showFiles icsra"
+alias dev_clean="rm -rf $DEV_ENV"
+
+alias div_start="cd /Users/reubinoff/development/divorce-life/dev; tmuxp load tmux_sessions.yml -y"
+
+# heroku autocomplete setup
+HEROKU_AC_ZSH_SETUP_PATH=/Users/reubinoff/Library/Caches/heroku/autocomplete/zsh_setup && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
